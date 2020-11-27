@@ -1,0 +1,184 @@
+-- Thijs Vercammen
+-- r0638823
+-- Digitale Synthese- labo
+-- 7 segment decoder
+-- November 2020
+
+library IEEE;
+use IEEE.std_logic_1164.all;
+use IEEE.std_logic_arith.all;
+use IEEE.std_logic_unsigned.all;
+
+entity application is
+port (
+	clk,rst:	in std_logic:='0';
+	clk_en:		in std_logic:='1';
+	up_in, down_in:	in std_logic:='0';	-- drukknopjes
+	-- syncha, synchb:	in std_logic:='0';	-- draaiknop
+	dis_out:	out std_logic_vector(6 downto 0):=(others =>'0');	-- 7seg LED
+	data_out:	out std_logic_vector(3 downto 0):=(others =>'0')	-- data van udcounter
+	);
+end application;
+
+architecture behav of application is
+    
+component debouncer
+port (	
+	clk,rst:    in std_logic:='0';
+	clk_en:     in std_logic:='1';
+	sig_in:     in std_logic:='0';  -- asynchroon drukknop, gaat er in
+	sync_out:    out std_logic:='0'	-- drukknop synchroon, komt er uit
+	);
+end component;
+
+--component posenc		-- aangepast zodat UD counter er niet in zit, dan kunnen beide draaiknop en de drukknopjes werken
+--PORT (	
+--	clk,rst		:IN  std_logic:='0';
+--	clk_en		:IN  std_logic:='1';
+--	syncha		:IN  std_logic:='0';
+--	synchb		:IN  std_logic:='0';
+--	draaiKUp	:OUT std_logic:='0';	-- draaiknop zegt: "up"
+--	draaiKDown	:OUT std_logic:='0'	-- "down"
+--	);
+--end component;
+--
+component moore_fsm
+PORT (	
+	clk,rst		:IN  std_logic:='0';
+	clk_en		:IN  std_logic:='1';
+	data		:IN  std_logic:='0';
+	puls		:OUT std_logic:='0'	--,
+--	edge_neg	:OUT std_logic:='0'
+	);
+end component;
+
+component ud_counter
+port (	
+	clk:		in std_logic:='0'; 
+	clk_en:		in std_logic:='1';
+	up, down, rst:	in std_logic:='0';
+	count_out: 	out std_logic_vector(3 downto 0):=(others => '0')
+	);
+end component;
+
+component seg_dec
+port(
+	--clk:		in std_logic; 
+	count_in:		in  std_logic_vector(3 downto 0):=(others => '0');
+	dis_out:	 	out std_logic_vector(6 downto 0):=(others => '0')
+	);
+end component;
+
+signal channel_A_edge_signal: 	std_logic:='0';	-- channel doorgeven van debouncer naar posenc
+signal channel_B_edge_signal: 	std_logic:='0';	-- analoog
+signal debounced_up_signal: 	std_logic:='0';	-- debounced up signaal naar de edge
+signal debounced_down_signal: 	std_logic:='0';	-- analoog
+
+-- nodig voor het mixen van de 2 up's (van posenc en van edge_up)
+signal up_udcounter: 		std_logic:='0';	-- de gemixed,voor naar de udcounter
+signal down_udcounter: 		std_logic:='0';	-- analoog
+signal up_geFlank_knopje: 	std_logic:='0';	-- van de drukknopjes, 
+signal down_geFlank_knopje: 	std_logic:='0';	-- analoog
+signal up_geFlank_draaiknop: 	std_logic:='0';	-- van de draaiknop
+signal down_geFlank_draaiknop: 	std_logic:='0';	-- analoog
+
+signal data_out_signal:		std_logic_vector(3 downto 0):=(others =>'0');
+
+
+begin
+data_out	<=data_out_signal;
+    
+debouncer_Up: debouncer	---------UP debouncer---------
+port map(
+	clk	=> clk,
+	clk_en	=> clk_en,
+	rst	=> rst,
+	sig_in	=> up_in,
+	sync_out=> debounced_up_signal
+	);
+
+debouncer_Down: debouncer	---------Down debouncer---------
+port map(
+	clk	=> clk,
+	clk_en	=> clk_en,
+	rst	=> rst,
+	sig_in	=> down_in,
+	sync_out=> debounced_down_signal
+	);
+
+edge_Up: moore_fsm		---------UP edge---------
+port map(
+	clk	=> clk,
+	clk_en	=> clk_en,
+	rst	=> rst,
+	data	=> debounced_up_signal,
+	puls	=> up_geFlank_knopje
+	);
+
+edge_Down: moore_fsm		---------Down edge---------
+port map(
+	clk	=> clk,
+	clk_en	=> clk_en,
+	rst	=> rst,
+	data	=> debounced_down_signal,
+	puls	=> down_geFlank_knopje
+	);
+
+--debouncer_A: debouncer	---------Channel A debouncer---------
+--port map(
+--	clk	=> clk,
+--	clk_en	=> clk_en,
+--	rst	=> rst,
+--	sig_in	=> syncha,
+--	sync_out=> channel_A_edge_signal
+--	);
+--
+--debouncer_B: debouncer	---------Channel B debouncer---------
+--port map(
+--	clk	=> clk,
+--	clk_en	=> clk_en,
+--	rst	=> rst,
+--	sig_in	=> synchB,
+--	sync_out=> channel_B_edge_signal
+--	);
+
+--posenc_1: posenc		---------position encoder---------
+--port map(
+--	clk       => clk,
+--	clk_en    => clk_en,
+--	rst       => rst,
+--	syncha    => channel_A_edge_signal,
+--	synchb    => channel_B_edge_signal,
+--	draaiKUp  => up_geFlank_draaiknop,
+--	draaiKDown => down_geFlank_draaiknop
+--	);
+
+zevensegdecoder_inst: seg_Dec
+port map(
+	count_in 	=> data_out_signal,
+	dis_out		=> dis_out
+	);
+
+udcounter_inst: ud_counter
+port map(
+	clk	=> clk,
+	clk_en	=> clk_en,
+	rst	=> rst,
+	up	=> up_geFlank_knopje,
+	down	=> down_geFlank_knopje,
+	count_out=>data_out_signal
+	);
+
+--mixen:process(up_geFlank_draaiknop,down_geFlank_draaiknop,up_geFlank_knopje,down_geFlank_knopje)
+--begin
+--if (up_geFlank_knopje='1' or up_geFlank_draaiknop='1') then		-- combineerd UP's
+--	up_udcounter	<='1';
+--else 	up_udcounter	<='0';
+--end if;
+--
+--if (down_geFlank_knopje='1' or down_geFlank_draaiknop='1') then		-- combineerd DOWN's
+--	down_udcounter	<='1';
+--else 	down_udcounter	<='0';
+--end if;
+--end process mixen;
+end behav;

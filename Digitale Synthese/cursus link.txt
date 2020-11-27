@@ -1,0 +1,2 @@
+http://telescript.denayer.be/~kvb/Labo_Digitale_Synthese/
+https://github.com/ThijsVercammen/Digitale-Synthese.git

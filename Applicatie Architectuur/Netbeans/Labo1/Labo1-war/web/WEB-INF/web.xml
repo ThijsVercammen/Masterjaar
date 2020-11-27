@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<web-app version="3.1" xmlns="http://xmlns.jcp.org/xml/ns/javaee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_3_1.xsd">
+    <context-param>
+        <param-name>email</param-name>
+        <param-value>application@architectuur.be</param-value>
+    </context-param>
+    <context-param>
+        <param-name>telefoon</param-name>
+        <param-value>0485/35.15.75</param-value>
+    </context-param>
+    <context-param>
+        <param-name>naam</param-name>
+        <param-value>KU Leuven</param-value>
+    </context-param>
+    <context-param>
+        <param-name>korting</param-name>
+        <param-value>15</param-value>
+    </context-param>
+    <context-param>
+        <param-name>btw</param-name>
+        <param-value>21</param-value>
+    </context-param>
+    <servlet>
+        <servlet-name>ResController</servlet-name>
+        <servlet-class>controllers.ResController</servlet-class>
+        <init-param>
+            <param-name>korting</param-name>
+            <param-value>25</param-value>
+        </init-param>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ResController</servlet-name>
+        <url-pattern>/ResController</url-pattern>
+    </servlet-mapping>
+    <session-config>
+        <session-timeout>
+            30
+        </session-timeout>
+    </session-config>
+</web-app>

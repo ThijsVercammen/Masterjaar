@@ -1,0 +1,137 @@
+-- Thijs Vercammen
+-- r0638823
+-- Digitale Synthese- labo
+-- November 2020
+library ieee;
+use ieee.std_logic_1164.all;
+use ieee.numeric_std.all;
+use ieee.std_logic_unsigned.all;
+
+entity despreading_tb is
+end despreading_tb;
+
+architecture structural of despreading_tb is 
+component despreading
+port (
+	pn_seq:		in std_logic;
+	sdi_spread:	in std_logic;
+	chip_sample:	in std_logic;
+	xor_despread:	out std_logic
+	);
+end component;
+
+for uut : despreading use entity work.despreading(behav);
+constant period : time := 100 ns;
+constant delay  : time :=  10 ns;
+
+signal clk:       	std_logic;
+signal clk_en:    	std_logic;
+signal rst:       	std_logic;
+signal pn_seq:		std_logic;
+signal sdi_spread:	std_logic;
+signal chip_sample:	std_logic;
+signal xor_despread:	std_logic;
+
+
+BEGIN
+uut: despreading PORT MAP(
+	pn_seq 		=> pn_seq,
+	sdi_spread 	=> sdi_spread,
+	chip_sample 	=> chip_sample,
+	xor_despread 	=> xor_despread
+	);
+--clock : process
+--begin 
+-- clk <= '0';
+-- wait for period/2;
+--loop
+--  clk <= '0';
+--  wait for period/2;
+--  clk <= '1';
+--  wait for period/2;
+--exit when end_of_sim;
+--end loop;
+--wait;
+--end process clock;
+
+tb : PROCESS 
+   procedure tbvector(constant stimvect : in std_logic_vector(2 downto 0))is
+     begin
+      chip_sample <= stimvect(2);
+      sdi_spread <= stimvect(1);
+      pn_seq <= stimvect(0);
+      wait for period;
+   end tbvector;
+   BEGIN
+      -- reset
+      	--tbvector("0001");
+      	--wait for period*5;
+	-- sdi_spread 1 and pn_seq 1
+	tbvector("011");
+      	wait for period*5;
+	-- chip_sample 1 
+	tbvector("111");
+      	wait for period;
+	-- chip_sample 0     
+    	tbvector("011");
+	wait for period*15;
+
+	-- sdi_spread 1 and pn_seq 0
+	tbvector("010");
+	wait for period;
+	-- chip_sample 1
+	tbvector("110");
+	wait for period;
+	-- chip_sample 0     
+    	tbvector("010");
+	wait for period*14;
+
+	-- sdi_spread 0 and pn_seq 0
+	tbvector("000");
+	wait for period;
+	-- chip_sample 1
+	tbvector("100");
+	wait for period;
+	-- chip_sample 0     
+    	tbvector("000");
+	wait for period*15;
+                
+	-- sdi_spread 0 and pn_seq 1
+	tbvector("001");
+	wait for period;
+	-- chip_sample 1
+	tbvector("101");
+	wait for period;
+	-- chip_sample 0     
+    	tbvector("001");
+	wait for period*14;    
+
+	-- sdi_spread 1 and pn_seq 1
+	tbvector("011");
+	wait for period;
+	-- chip_sample 1
+	tbvector("111");
+	wait for period;
+	-- chip_sample 0     
+    	tbvector("011");
+	wait for period*15;    
+
+	-- sdi_spread 1 and pn_seq 0
+	tbvector("010");
+	wait for period;
+	-- chip_sample 1
+	tbvector("110");
+	wait for period;
+	-- chip_sample 0     
+    	tbvector("010");
+	wait for period*15;  
+
+	-- reset
+     	--tbvector("0001");
+	wait for period*20;  
+
+      --end_of_sim <= true;
+      wait;
+   END PROCESS;
+
+  END;
