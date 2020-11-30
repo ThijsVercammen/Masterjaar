@@ -1,0 +1,44 @@
+﻿@using CarResN.Models;
+@using System.Collections;
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <h2>bedankt voor de reservatie @Session["klantnr"]</h2>
+    <h3>reservaties:</h3>
+    <!-->ul>
+        @//foreach (Reservaties res in (((Reservaties)Session["reservaties"]) as IEnumerable))
+        {
+            <li>klantNr: @res.}</li>
+            <li>Model: ${res.wnr.wnaam}</li>
+            <li>Pick-up: ${res.lnrvan.lnaam}</li>
+            <li>Pick-up datum: ${res.datumvan}</li>
+            <li>Drop-off: ${res.lnrnaar.lnaam}</li>
+            <li>Drop-of datum: ${res.datumres}</li>
+            <li>Basisprijs: â‚¬${res.wnr.prijs}</li>
+            <li>Met BTW: â‚¬${res.wnr.prijs+(initParam.btw*res.wnr.prijs/100)}</li>
+            <li>Met korting: â‚¬${res.wnr.prijs-(initParam.korting*res.wnr.prijs/100)+(initParam.btw*res.wnr.prijs/100)}</li>
+            <li>
+                <form method="post" action="<c:url value='ResController'/>">
+                    <input hidden="" id="res_nr" name="res_nr" value="${res.mr}">
+                    <input type="Submit" name="submit" value="delete">
+                </form>
+            </li>
+            <br>
+        }
+        <!--li>aantal bestellingen: ${sessionScope.aantal}</li>
+        <li>Totale basisprijs: ${sessionScope.totaal}</li>
+        <li>Totale prijs met BTW: ${sessionScope.totaal+(initParam.btw*res.prijs/100)}</li-->
+    <!-->/ul-->
+
+    <form method="post" action="<c:url value='ResController'/>">
+        <input type="Submit" name="submit" value="volgende reservatie">
+    </form>
+
+</body>
+</html>

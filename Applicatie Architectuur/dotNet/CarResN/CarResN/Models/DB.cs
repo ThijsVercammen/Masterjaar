@@ -12,7 +12,7 @@ namespace CarResN.Models
 
         public SQLiteConnection connect()
         {
-            String db = @"URI=file:C:\db\carres.db";
+            String db = @"URI=file:D:\Desktop\Masterjaar\Applicatie Architectuur\dotNet\CarResN\carres.db";
 
             SQLiteConnection conn = new SQLiteConnection(db);
             conn.Open();

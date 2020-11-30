@@ -46,7 +46,7 @@ namespace CarResN.Models
             locatielijst.Add(new Locaties(2, "ANTWERPEN"));
         }
 
-        public decimal getWagenID(string wagennaam)
+        public int getWagenID(string wagennaam)
         {
             for (int i = 0; i < wagenlijst.Count; i++)
             {
@@ -58,7 +58,7 @@ namespace CarResN.Models
             return 0;
         }
 
-        public decimal getLocatieID(string locatienaam)
+        public int getLocatieID(string locatienaam)
         {
             for (int i = 0; i < wagenlijst.Count; i++)
             {

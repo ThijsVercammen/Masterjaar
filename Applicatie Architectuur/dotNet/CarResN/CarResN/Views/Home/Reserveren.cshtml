@@ -1,0 +1,51 @@
+﻿@using CarResN.Models;
+@using System.Collections;
+
+<!DOCTYPE html>
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title></title>
+</head>
+<body>
+    <h2>Welkom, uw klantnr is @Session["klantnr"] . </h2>
+    <h3>Maak uw reservatie</h3>
+    <form method="post" action="Reserveer">
+        <label for="pickup">Pick_up Location :</label>
+        <select name="Plocaties" size="1">
+            @foreach (Locaties l in (((Data)Session["data"]).locatielijst as IEnumerable))
+            {
+                <option value="@l.naam">@l.naam</option>
+            }
+        </select>
+        <br>
+        <label for="types">Vehicle Type :</label>
+        <select name="types" size="1">
+            @foreach (Autos a in (((Data)Session["data"]).wagenlijst as IEnumerable))
+            {
+                <option value="@a.naam">@a.naam</option>
+            }
+        </select>
+        <br>
+        <label for="Drop_of">Drop_of Location :</label>
+        <select name="Dlocaties" size="1">
+            @foreach (Locaties l in (((Data)Session["data"]).locatielijst as IEnumerable))
+            {
+                <option value="@l.naam">@l.naam</option>
+            }
+        </select>
+        <br>
+        <label for="Pdate">Pick up Date :</label>
+        <input type="date" id="Pdate" name="Pdate" required>
+        <br>
+        <label for="Ddate">Drop off Date :</label>
+        <input type="date" id="Ddate" name="Ddate" required>
+        <br>
+        <label for="aantdagen">Nr of days :</label>
+        <input type=number id="aantdagen" name="aantdagen">
+        <br>
+        <input type="Submit" name="submit" value="reserveer">
+    </form>
+
+</body>
+</html>

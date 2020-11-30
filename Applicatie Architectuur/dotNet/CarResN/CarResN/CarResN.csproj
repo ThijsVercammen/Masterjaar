@@ -143,15 +143,10 @@
     <Compile Include="Models\Autos.cs" />
     <Compile Include="Models\Data.cs" />
     <Compile Include="Models\DB.cs" />
+    <Compile Include="Models\Klanten.cs" />
     <Compile Include="Models\Locaties.cs" />
+    <Compile Include="Models\Reservaties.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Views\Home\Reserveer.aspx.cs">
-      <DependentUpon>Reserveer.aspx</DependentUpon>
-      <SubType>ASPXCodeBehind</SubType>
-    </Compile>
-    <Compile Include="Views\Home\Reserveer.aspx.designer.cs">
-      <DependentUpon>Reserveer.aspx</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap-theme.css" />
@@ -175,7 +170,6 @@
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.min.js" />
     <Content Include="Scripts\modernizr-2.8.3.js" />
-    <Content Include="Views\Home\Reserveer.aspx" />
     <Content Include="Web.config" />
     <Content Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
@@ -188,6 +182,8 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Views\Home\Registreer.cshtml" />
+    <Content Include="Views\Home\Reserveren.cshtml" />
+    <Content Include="Views\Home\Overzicht.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
